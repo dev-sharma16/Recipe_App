@@ -2,37 +2,23 @@ import React, { useContext, useState } from 'react'
 import {useForm} from 'react-hook-form'
 import {nanoid} from 'nanoid'
 import { recipeContext } from '../context/RecipeContext';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function Create() {
     const{ register, handleSubmit, reset} = useForm();
 
-    // const [imageUrl, setimageUrl] = useState("")
-    // const [title, setTitle] = useState("")
-    // const [description, setDescription] = useState("");
-    // const [ingredients, setIngredients] = useState("");
-    // const [instructions, setInstructions] =  useState("");
-
-    // const [recipe, setRecipe] = useState({})
-
     const { data, setData } = useContext(recipeContext);
+    const navigate = useNavigate()
 
     const submitHandler = (recipeData)=>{
         recipeData.id=nanoid();
-        // console.log(recipeData);
-        // setRecipe(recipeData);
+        setData([...data, recipeData]);  
+        toast.success("New recipe created..!")
 
-        // const copyData = [...data];
-        // copyData.push(recipeData);
-        // setData(copyData);
-
-        setData([...data, recipeData])
         console.log(recipeData);
-
-        // if(data){
-        //     reset();
-        // }
-
         reset();
+        navigate("/recipes");
     }
 
     return (
