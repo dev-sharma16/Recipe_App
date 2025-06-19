@@ -5,6 +5,8 @@ import Recipes from '../pages/Recipes'
 import About from '../pages/About'
 import Create from '../pages/Create'
 import Details from '../pages/Details'
+import PageNotFound from '../pages/PageNotFound'
+import Fav from "../pages/Fav"
 function Mainroutes() {
     return (
         <Routes>
@@ -12,7 +14,9 @@ function Mainroutes() {
             <Route path = "/recipes" element={<Recipes/>}/>
             <Route path = "/recipes/details/:id" element={<Details/>}/>
             <Route path = "/create" element={<Create/>}/>
+            <Route path = "/favourite" element={<Fav/>}/>
             <Route path = "/about" element={<About/>}/>
+            <Route path = "*" element={<PageNotFound/>}/>
         </Routes>
     )
 }
