@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { recipeContext } from '../context/RecipeContext';
 import { useNavigate } from 'react-router-dom';
@@ -16,42 +16,72 @@ function Details() {
     console.log(recipe);
     
     const{ register, handleSubmit, reset} = useForm({defaultValues : {
-        image: recipe.image,
-        title: recipe.title,
-        description: recipe.description,
-        category: recipe.category,
-        ingredients:recipe.ingredients,
-        instructions:recipe.instruction,
+        image: recipe?.image,
+        title: recipe?.title,
+        description: recipe?.description,
+        category: recipe?.category,
+        ingredients:recipe?.ingredients,
+        instructions:recipe?.instruction,
     }});
     const navigate = useNavigate();
 
-    const submitHandler = (recipeData)=>{
+    const updateHandler = (recipeData)=>{
         const index = data.findIndex((recipe)=> params.id == recipe.id);
         // console.log(index);
         const copyData = [...data];
         copyData[index] = {...copyData[index],...recipeData};
         setData(copyData);
-
+        localStorage.setItem("recipes",JSON.stringify(copyData));
         toast.success("Recipe Updated..!")
         // navigate("/recipes");
     }
+    const [favroite, setFav] = useState(JSON.parse(localStorage.getItem("fav")) || []);
     
     const DeleteHandler = () => {
         const filterdata = data.filter((r) => r.id != params.id);
         setData(filterdata);
+        localStorage.setItem("recipes",JSON.stringify(filterdata));
+
+        const filterFav = favroite.filter((f)=> f.id!= recipe?.id);
+        setFav(filterFav);
+        localStorage.setItem("fav",JSON.stringify(filterFav));
 
         toast.success("Recipe Deleted..!")
         navigate("/recipes");
     }
 
+    const FavHandler = () =>{
+        const copyFav = [...favroite];
+        copyFav.push(recipe);
+        setFav(copyFav);
+        localStorage.setItem("fav", JSON.stringify(copyFav));
+    }
+
+    const UnFavHandler = () =>{
+        const filterFav = favroite.filter((f)=> f.id!= recipe?.id);
+        setFav(filterFav);
+        localStorage.setItem("fav", JSON.stringify(filterFav));
+    }
+
+    useEffect(()=>{
+        console.log("Details page is mounted");
+        return ()=>{
+            console.log("Details page is ummounted");
+        }
+    },[favroite])
+
     return (
         <div className='w-full flex'>
-            <div className="left w-1/2 p-2">
-                <h1 className="text-4xl font-black">{recipe.title}</h1>
-                <img src={recipe.image} alt="" />
+            <div className="relative left w-1/2 p-2">
+                {favroite.find((f)=> f.id == recipe?.id) 
+                    ? <i onClick={UnFavHandler} className="right-[8%] absolute text-4xl text-red-500 ri-poker-hearts-fill"></i>
+                    : <i onClick={FavHandler} className="right-[8%] absolute text-4xl text-red-500 ri-poker-hearts-line"></i>
+                }
+                <h1 className="text-4xl font-black">{recipe?.title}</h1>
+                <img className='h-[65vh] mt-10' src={recipe?.image} alt="" />
             </div>
 
-            <form  onSubmit = {handleSubmit(submitHandler)} className='flex flex-col w-[50%] text-lg align-center justify-center p-2 '>
+            <form  onSubmit = {handleSubmit(updateHandler)} className='flex flex-col w-[50%] text-lg align-center justify-center p-2 '>
                 <input
                     className='block border-b outline-0 p-2'
                     {...register("image")}
