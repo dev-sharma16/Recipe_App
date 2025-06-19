@@ -13,7 +13,10 @@ function Create() {
 
     const submitHandler = (recipeData)=>{
         recipeData.id=nanoid();
-        setData([...data, recipeData]);  
+        const copyData = [...data];
+        copyData.push(recipeData)
+        setData(copyData);  
+        localStorage.setItem("recipes",JSON.stringify(copyData));
         toast.success("New recipe created..!")
 
         console.log(recipeData);
