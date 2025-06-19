@@ -13,6 +13,9 @@ function Navbar() {
             <NavLink className={(e)=> e.isActive ? "text-red-300  bg-gray-900 p-3 rounded-2xl transition": ""} to="/create">
                 Create Recipe
             </NavLink>
+            <NavLink className={(e)=> e.isActive ? "text-red-300  bg-gray-900 p-3 rounded-2xl transition": ""} to="/favourite">
+                Favourite
+            </NavLink>
             <NavLink className={(e)=> e.isActive ? "text-red-300  bg-gray-900 p-3 rounded-2xl transition" : ""} to="/about">
                 About
             </NavLink>
